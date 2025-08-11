@@ -1,0 +1,8 @@
+python-dotenv>=1.0.1
+flask_sqlalchemy>=3.1.0
+flask
+openai
+flask-cors
+qdrant-client
+
+requests>=2.31.0

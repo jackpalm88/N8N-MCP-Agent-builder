@@ -1,0 +1,69 @@
+graph TB
+    subgraph "Lietotāja Saskarnes Slānis"
+        UI[Web Interface]
+        API_GW[API Gateway]
+        AUTH[Authentication Service]
+    end
+    
+    subgraph "AI Aģenta Kodols"
+        NLP[Natural Language Processor]
+        INTENT[Intent Analyzer]
+        WORKFLOW_GEN[Workflow Generator]
+        VALIDATOR[Workflow Validator]
+    end
+    
+    subgraph "Zināšanu Bāzes Slānis"
+        VECTOR_DB[(Vector Database<br/>Qdrant/Weaviate)]
+        WORKFLOW_DB[(Workflow Database<br/>2300+ JSON workflows)]
+        NODE_DB[(Node Configuration DB<br/>n8n Documentation)]
+    end
+    
+    subgraph "n8n Integrācija"
+        N8N_API[n8n API Client]
+        N8N_INSTANCE[n8n Instance]
+        WORKFLOW_DEPLOY[Workflow Deployment]
+    end
+    
+    subgraph "Atbalsta Servisi"
+        CACHE[Redis Cache]
+        LOGGER[Logging Service]
+        MONITOR[Monitoring & Metrics]
+    end
+    
+    %% Lietotāja plūsma
+    UI --> API_GW
+    API_GW --> AUTH
+    AUTH --> NLP
+    
+    %% AI apstrādes plūsma
+    NLP --> INTENT
+    INTENT --> VECTOR_DB
+    VECTOR_DB --> WORKFLOW_GEN
+    WORKFLOW_GEN --> WORKFLOW_DB
+    WORKFLOW_GEN --> NODE_DB
+    WORKFLOW_GEN --> VALIDATOR
+    
+    %% n8n integrācija
+    VALIDATOR --> N8N_API
+    N8N_API --> N8N_INSTANCE
+    N8N_INSTANCE --> WORKFLOW_DEPLOY
+    
+    %% Atbalsta servisi
+    NLP --> CACHE
+    WORKFLOW_GEN --> CACHE
+    API_GW --> LOGGER
+    VALIDATOR --> MONITOR
+    
+    %% Styling
+    classDef userLayer fill:#e1f5fe
+    classDef aiCore fill:#f3e5f5
+    classDef dataLayer fill:#e8f5e8
+    classDef n8nLayer fill:#fff3e0
+    classDef supportLayer fill:#fafafa
+    
+    class UI,API_GW,AUTH userLayer
+    class NLP,INTENT,WORKFLOW_GEN,VALIDATOR aiCore
+    class VECTOR_DB,WORKFLOW_DB,NODE_DB dataLayer
+    class N8N_API,N8N_INSTANCE,WORKFLOW_DEPLOY n8nLayer
+    class CACHE,LOGGER,MONITOR supportLayer
+
